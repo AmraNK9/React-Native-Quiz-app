@@ -8,7 +8,8 @@ let correctAnswer;
 const Quiz = ({navigation}) => {
   const [question,setQuestion] = useState('');
   const [quizIndex,setQuizIndex] = useState(0);
-  const [options,Setoptions] = useState([])
+  const [options,Setoptions] = useState([]);
+  const [btnText,setBtnText] = useState('Skip')
   let api = 'https://opentdb.com/api.php?amount=10&category=18&difficulty=easy&type=multiple';
 
   let CorrestIndex = Math.floor(Math.random()*4)
@@ -35,9 +36,13 @@ const Quiz = ({navigation}) => {
       correctAnswer = questionArr[quizIndex].correct_answer;
       optionArr.splice(CorrestIndex,0,correctAnswer);
       Setoptions(optionArr)
-      console.log(questionArr)
+      setBtnText("Skip")
     }
 
+  }
+
+  const handleChoice = ()=>{
+    setBtnText('Next')
   }
 
   useEffect(
@@ -53,24 +58,20 @@ const Quiz = ({navigation}) => {
       <Text style={style.question}>{question[quizIndex].question}</Text>
      
      <View style={style.optionWrapper}>
-       <TouchableOpacity style={style.option}>
-         <Text style={style.optionText}>{options[0]}</Text>
-       </TouchableOpacity>
-       <TouchableOpacity style={style.option}>
-         <Text style={style.optionText}>{options[1]}</Text>
-       </TouchableOpacity>
-       <TouchableOpacity style={style.option}>
-         <Text style={style.optionText}>{options[2]}</Text>
-       </TouchableOpacity>
-       <TouchableOpacity style={style.option}>
-         <Text style={style.optionText}>{options[3]}</Text>
-       </TouchableOpacity>
+      {options.map((value,index)=>{
+        return(
+          <TouchableOpacity key={index} onPress={()=>{handleChoice()}} style={style.option}>
+          <Text style={style.optionText}>{value}</Text>
+        </TouchableOpacity>
+        )
+         
+      })}
      </View>
 
      <View style={style.nextBtnWrapper}>
        <TouchableOpacity style={style.nextBtn} onPress={()=>{handleIndex()}}>
          <Text style={style.nextBtnText}>
-           Skip
+           {btnText}
          </Text>
        </TouchableOpacity>
      </View>
