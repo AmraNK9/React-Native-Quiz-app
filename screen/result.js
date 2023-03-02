@@ -7,6 +7,7 @@ const Result = ({navigation}) => {
       <Text style={style.result}>{global.mark}</Text>
       <Text style={style.saying}>Mistakes are proof that you are trying.</Text>
       <TouchableOpacity style={style.button} onPress={()=>{
+        global.mark = 0;
         navigation.navigate('Home')
       }}>
         <Text style={style.btnText}>Reset</Text>
