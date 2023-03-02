@@ -1,10 +1,10 @@
 import { View, Text,StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
-
+import "./quiz"
 const Result = ({navigation}) => {
   return (
     <View style = {style.container}>
-      <Text style={style.result}>12</Text>
+      <Text style={style.result}>{global.mark}</Text>
       <Text style={style.saying}>Mistakes are proof that you are trying.</Text>
       <TouchableOpacity style={style.button} onPress={()=>{
         navigation.navigate('Home')

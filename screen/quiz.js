@@ -5,12 +5,16 @@ let index =0;
 let optionArr = [];
 let questionArr =[];
 let correctAnswer;
+
+global.mark = 0;
 const Quiz = ({navigation}) => {
   const [question,setQuestion] = useState('');
   const [quizIndex,setQuizIndex] = useState(0);
   const [options,Setoptions] = useState([]);
-  const [btnText,setBtnText] = useState('Skip')
-  let api = 'https://opentdb.com/api.php?amount=10&category=18&difficulty=easy&type=multiple';
+  const [btnText,setBtnText] = useState('Skip');
+  const [isPress,setIsPress] = useState(false);
+
+  let api = "https://opentdb.com/api.php?amount=10&category=18&difficulty=easy&type=multiple&encode=url3986";
 
   let CorrestIndex = Math.floor(Math.random()*4)
 
@@ -31,18 +35,26 @@ const Quiz = ({navigation}) => {
     }
     else{
       setQuizIndex(++index)
-
-      optionArr = questionArr[quizIndex].incorrect_answers;
-      correctAnswer = questionArr[quizIndex].correct_answer;
+      optionArr = questionArr[index].incorrect_answers;
+      correctAnswer = questionArr[index].correct_answer;
       optionArr.splice(CorrestIndex,0,correctAnswer);
       Setoptions(optionArr)
+
       setBtnText("Skip")
     }
-
   }
 
-  const handleChoice = ()=>{
-    setBtnText('Next')
+  const handleChoice = (index)=>{
+    setIsPress(true)
+    setBtnText('Next');
+    if(index == CorrestIndex){
+      console.log("This is Right")
+      global.mark++;
+      console.log(global.mark)
+    }
+    else{
+      console.log("Incorrect")
+    }
   }
 
   useEffect(
@@ -55,16 +67,15 @@ const Quiz = ({navigation}) => {
     <View style={style.container}>
       
       {question&&<View style={style.container}>
-      <Text style={style.question}>{question[quizIndex].question}</Text>
+      <Text style={style.question}>{decodeURIComponent(question[quizIndex].question) }</Text>
      
      <View style={style.optionWrapper}>
       {options.map((value,index)=>{
         return(
-          <TouchableOpacity key={index} onPress={()=>{handleChoice()}} style={style.option}>
-          <Text style={style.optionText}>{value}</Text>
+          <TouchableOpacity key={index} onPress={()=>{handleChoice(index)}} style={[style.option,CorrestIndex === index? style.btnPress:style.optionTrue ]}>
+          <Text style={style.optionText}>{decodeURIComponent(value)}</Text>
         </TouchableOpacity>
         )
-         
       })}
      </View>
 
@@ -75,7 +86,7 @@ const Quiz = ({navigation}) => {
          </Text>
        </TouchableOpacity>
      </View>
-      </View>}
+      </View>} 
       
     </View>
   )
@@ -128,6 +139,12 @@ const style = StyleSheet.create(
         },
         nextBtnText:{
           textAlign:'center'
+        },
+        btnPress:{
+          backgroundColor:"#0ab2e6"
+        },
+        optionTrue:{
+          backgroundColor:"#e869c9"
         }
 
     }
